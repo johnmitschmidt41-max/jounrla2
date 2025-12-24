@@ -19,16 +19,27 @@ const allowedOrigins = [
   'https://journla2-production.up.railway.app'
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    return allowedOrigins.includes(origin) ? callback(null, true) : callback(new Error('Not allowed by CORS'));
-  },
-  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization'],
-  credentials: true,
-  optionsSuccessStatus: 204
-}));
+// place before your routes
+app.use((req, res, next) => {
+  const allowed = [
+    'https://trade-journal-alpha.vercel.app',
+    'https://trade-journal-alpha.vercel.app/',
+    'https://journla2-production.up.railway.app'
+  ];
+  const origin = req.headers.origin as string | undefined;
+
+  if (origin && allowed.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept,Origin');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
