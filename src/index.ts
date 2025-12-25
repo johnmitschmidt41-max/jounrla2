@@ -19,6 +19,11 @@ const allowedOrigins = [
   'https://journla2-production.up.railway.app'
 ];
 
+app.use((req, res, next) => {
+  console.log(`[REQ] ${req.method} ${req.originalUrl} origin=${req.headers.origin}`);
+  next();
+});
+
 // place before your routes
 app.use((req, res, next) => {
   const allowed = [
@@ -52,6 +57,5 @@ app.get('/api/health', (req, res) => {
 });
 
 // Start server
-app.listen(config.port, () => {
-  console.log(`🚀 Server running on http://localhost:${config.port}`);
-});
+const port = process.env.PORT || config.port || 5000;
+app.listen(port, ()=> console.log(`Server listening on ${port}`));
