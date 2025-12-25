@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 // CORS middleware - SECOND (before body parsers)
 const allowedOrigins = [
   'https://trade-journal-alpha.vercel.app',
-  'https://journla2-production.up.railway.app'
+  'https://jounrla2-production.up.railway.app'  // ✅ Fixed spelling
 ];
 
 app.use((req, res, next) => {
@@ -48,7 +48,7 @@ app.use(express.urlencoded({ extended: true }));
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Health check - BEFORE other routes for debugging
+// Health check - BEFORE other routes
 app.get('/api/health', (req, res) => {
   console.log('Health check hit');
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
